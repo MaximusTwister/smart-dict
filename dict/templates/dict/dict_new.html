@@ -1,0 +1,17 @@
+{% extends 'dict/index.html'%}
+
+{% block content %}
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-4 mt-5 text-center">
+                <h3>New Dictionary</h3>
+                <form action="" method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <input type="submit" value="Save">
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock content%}
+

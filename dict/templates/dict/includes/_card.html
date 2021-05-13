@@ -1,0 +1,55 @@
+<div class="row justify-content-center" style="display: grid; align-items: center; height: 700px;">
+    <div class="card text-dark bg-light border-success" style="width: 600px">
+        <ul class="list-group list-group-flush">
+            <div id="learnCard">
+
+                <div class="front card-body" style="text-align: center">
+                    <p style="font-size: 76px">{{ card_to_learn.word_native }}</p>
+                    <p style="font-size: 46px">{{ card_to_learn.context_native }}</p>
+                </div>
+
+                <div class="back card-body" style="text-align: center; width: 400px;">
+                    <p style="font-size: 76px">{{ card_to_learn.word_foreign }}</p>
+                    <div class="my-4 row justify-content-center">
+                        <audio controls id="audioOne"  style="display:none; width:50%">
+                            <source src="{{ card_to_learn.word_foreign_audio.url }}" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </div>
+
+                    {% if card_to_learn.context_foreign %}
+                    <p style="font-size: 46px">{{ card_to_learn.context_foreign }}</p>
+                    <div class="my-4 row justify-content-center">
+                        <audio controls id="audioTwo" style="display:none; width:50%">
+                            <source src="{{ card_to_learn.context_foreign_audio.url }}" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </div>
+                    {% endif %}
+                </div>
+
+
+            </div>
+
+            <div class="my-4 row justify-content-center">
+
+                    <label for="scoreSlider" class="form-label" style="display: block">
+                        <span class="badge rounded-pill bg-info text-dark" id="scoreSliderValue" style="font-size:22px">
+                            {{ card_to_learn.score }}
+                        </span>
+                    </label>
+
+                <input type="range" class="form-range" value={{ card_to_learn.score }} min='0' max='100' step="1"
+                       id="scoreSlider" style="width: 400px; display: block">
+            </div>
+        </ul>
+    </div>
+
+    <form method="post" action="{% url 'dict_learn_url' slug=card_to_learn.dictionary.slug pk=card_to_learn.pk%}">
+        <div id="{{ card_to_learn.pk }}" class="my-4 row justify-content-center">
+        {% csrf_token %}
+            <button type="button" class="btn btn-dark" id="nextBtn_{{ card_to_learn.pk }}" style="width: auto">Next Word</button>
+        </div>
+    </form>
+
+</div>

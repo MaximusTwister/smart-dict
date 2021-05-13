@@ -1,0 +1,21 @@
+.inp {
+    width: 100px;
+}
+
+input[type='text'].form-control {
+    text-align: center;
+}
+
+.dict-view {
+    text-align: center;
+}
+
+.word-item {
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.edit-buttons {
+    margin: inherit;
+    margin-left: 5px !important;
+}

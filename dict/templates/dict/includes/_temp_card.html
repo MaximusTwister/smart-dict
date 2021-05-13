@@ -1,0 +1,43 @@
+
+<div style="width: 400px; margin: auto">
+    {% for word in temp_words %}
+        <div id="botWordDiv_{{ word.pk }}" class="row my-2">
+            <div class="col d-grid gap-2 d-md-flex justify-content-md-start">
+                <h3>{{ word.title }}</h3>
+            </div>
+            <div class="col d-grid gap-2 d-md-flex justify-content-md-end">
+                <a id="botAddBtn_{{ word_pk }}" href="{% url 'edit_bot_word_url' pk=word.pk mode='save' %}"
+                   class="btn btn-primary me-md-2" type="button">Save</a>
+
+                <a id="botDelBtn_{{ word.pk }}" href="{% url 'edit_bot_word_url' pk=word.pk mode='del' %}"
+                   class="btn btn-primary" type="button">Remove</a>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+    <!-- The Modal New Word -->
+<div class="modal" id="newWordModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Add New Word</h4>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                <form method="post" action="">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button type="submit" id='modalSaveBtn' class="btn btn-success">Save</button>
+                        <button type="button" id='modalCloseBtn' class="btn btn-danger">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

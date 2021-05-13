@@ -1,0 +1,79 @@
+{% extends 'dict/index.html'%}
+
+{% block content %}
+<div class="container mt-3">
+    <div class="row justify-content-center">
+        <div class="col-4 align-self-center" style="text-align: center">
+            <span class="badge bg-primary" style="font-size: 32px; text-align: center">
+                {{ dict_view.title }}
+            </span>
+        </div>
+    </div>
+    <div class="row justify-content-center mt-3">
+        <div class="col-4 align-self-center" style="text-align: center">
+            <span class="badge bg-secondary" style="font-size: 18px">
+                {{ dict_view.description }}
+            </span>
+        </div>
+    </div>
+
+    <div class="row justify-content-center mt-5">
+        <div style="text-align: center" role="group">
+            <button type="button" data-toggle="modal" data-target="#newWordModal"
+               id="newWordBtn" class="btn btn-success">New Word️</button>
+            <a type="button" id="startLearn_{{ dict_view.slug }}" class="btn btn-success"
+               href="{% url 'dict_learn_url' slug=dict_view.slug pk=0 %}">Start Learning</a>
+        </div>
+    </div>
+
+    <div class="row justify-content-center mt-3">
+        {% for word in dict_view.cards.all %}
+            <form method="post" action="{{ word.get_absolute_url }}">
+                <div id='{{ word.pk }}' class="input-group word-item">
+                    {% csrf_token %}
+                    <textarea class="dict-view" id='word_foreign_{{ word.pk }}'  disabled>{{ word.word_foreign }}</textarea>
+                    <textarea class="dict-view" id='word_native_{{ word.pk }}' disabled>{{ word.word_native }}</textarea>
+                    <textarea class="dict-view" id='context_foreign_{{ word.pk }}' disabled>{{ word.context_foreign }}</textarea>
+                    <textarea class="dict-view" id='context_native_{{ word.pk }}' disabled>{{ word.context_native }}</textarea>
+
+                    <div class="edit-buttons">
+                        <button type="button" id="editBtn_{{ word.pk }}" class="btn btn-success">✏️</button>
+                        <button type="button" id="saveBtn_{{ word.pk }}" class="btn btn-success" style="display: none">💾</button>
+                        <button type="button" id="discardBtn_{{ word.pk }}" class="btn btn-warning" style="display: none">❌</button>
+                    </div>
+
+                </div>
+            </form>
+        {% endfor %}
+    </div>
+</div>
+
+
+<!-- The Modal New Word -->
+<div class="modal" id="newWordModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Add New Word</h4>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                <form method="post" action="{% url 'card_new_url' dict_view.slug%}">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button type="submit" id='modalSaveBtn' class="btn btn-success">Save</button>
+                        <button type="button" id='modalCloseBtn' class="btn btn-danger">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock content%}
