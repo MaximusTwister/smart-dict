@@ -30,11 +30,11 @@ class WordCard(models.Model):
         for word_type, word in word_objects.items():
             print(f'*** [Save WordCard Method] Trying to save: {word} with length: {len(word)}')
 
-            if bool(audio_objects[word_type]) is False:
+            if bool(audio_objects[word_type]) is False and len(word) > 1:
                 full_path_temp = google_tts_api(word)
                 print(f'*** [Save WordCard Method] Google TTS Created')
             else:
-                print(f'*** [Save WordCard Method] Google TTS Already Exist')
+                print(f'*** [Save WordCard Method] Skip Google TTS for this word')
                 continue
 
             file_name = f'{word}.mp3'

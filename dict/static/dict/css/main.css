@@ -19,3 +19,7 @@ input[type='text'].form-control {
     margin: inherit;
     margin-left: 5px !important;
 }
+
+.list-group {
+    padding-right: 0;
+}

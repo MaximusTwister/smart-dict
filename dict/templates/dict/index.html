@@ -20,7 +20,7 @@
 {% block content %}
 
     {% if card_to_learn %}
-        <div id="learnCardDiv">
+        <div id="learnCardDiv" class="container">
             {% include 'dict/includes/_card.html' with card_to_learn=card_to_learn %}
         </div>
     {% endif %}

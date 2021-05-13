@@ -83,7 +83,7 @@ def update_word_card_with_data(request, kwargs):
 
     if len(new_data_clean_diff) == 0:
         print(f'=== [Update Word Card] Nothing to Save')
-        return True
+        return False
 
     title_to_audio_type = {'word_foreign': 'word_foreign_audio', 'context_foreign': 'context_foreign_audio'}
     for word_title, audio_title in title_to_audio_type.items():
