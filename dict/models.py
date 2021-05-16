@@ -1,6 +1,9 @@
+from datetime import datetime
+
 from django.db import models
 from django.urls import reverse_lazy
 from django.core.files import File
+from django.utils import timezone
 from slugify import slugify
 
 from dict.google_api.google_tts_api import google_tts_api
@@ -16,6 +19,7 @@ class WordCard(models.Model):
     score = models.IntegerField(default=0)
     dictionary = models.ForeignKey('Dictionary', on_delete=models.SET_NULL, related_name='cards', null=True)
     is_learning = models.BooleanField(default=False)
+    last_learn_date = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return self.word_foreign

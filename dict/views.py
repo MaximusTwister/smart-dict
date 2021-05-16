@@ -32,7 +32,7 @@ class CardNew(View):
 
 class DictLearnView(View):
     def get(self, request, *args, **kwargs):
-        print(f'\n=== Dict Learn View GET KWARGS: {kwargs}')
+        print(f'\n=== [Dict Learn View] Dict Learn View GET KWARGS: {kwargs}')
         if kwargs.get('pk') == 0:
             set_cards_initial_state(kwargs)
             random_card_to_learn = get_random_card()

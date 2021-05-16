@@ -23,3 +23,25 @@ input[type='text'].form-control {
 .list-group {
     padding-right: 0;
 }
+
+.center-image {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 90%;
+}
+
+.index-div {
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    height: 600px;
+}
+
+.index-header {
+    margin-left: 25px;
+    margin-top: 25px;
+    font-family: 'American Typewriter', sans-serif;
+    color: darkorange;
+    font-size: 55px;
+}

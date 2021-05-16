@@ -1,9 +1,11 @@
 import json
 import os
+from datetime import datetime, timedelta
 from itertools import chain
 
 from django.forms.models import model_to_dict
 from django.core.files import File
+from django.utils import timezone
 
 from dict.models import WordCard, Dictionary
 from dict.google_api.google_tts_api import google_tts_api
@@ -15,37 +17,48 @@ def set_cards_initial_state(kwargs):
     all_words_amount = all_words.count()
     words_to_learn_setting = Dictionary.objects.get(slug=kwargs['slug']).words_to_learn
 
-    print(f'=== All Words: {all_words} -- {all_words_amount}')
-    print(f'=== Words to learn Setting: {words_to_learn_setting}')
+    print(f'=== [Set Initial] All Words: {all_words} -- {all_words_amount}')
+    print(f'=== [Set Initial] Words to learn Setting: {words_to_learn_setting}')
+
+    seven_days_ago = datetime.today() - timedelta(days=7)
+    three_days_ago = datetime.today() - timedelta(days=3)
 
     conditions = {
-        '<40': all_words.filter(score__lte=40),
-        '41_30': all_words.filter(score__range=(41, 70)),
-        '71_100': all_words.filter(score__range=(71, 100))
+        '71_100': all_words.filter(score__range=(81, 100), last_learn_date__lte=seven_days_ago),
+        '41_70': all_words.filter(score__range=(51, 80), last_learn_date__lte=three_days_ago),
+        '<40': all_words.filter(score__lte=50)
     }
 
     none_qs = WordCard.objects.none()
     qs_list = []
+    conditions_amount = len(conditions) + 1
 
     for condition, filtered in conditions.items():
+        conditions_amount -= 1
+
         if len(filtered) <= 0:
+            print(f' [Prepare Cards to Learn] Condition: {condition} is empty. Continue')
             continue
-        for _ in range(int(words_to_learn_setting/3)):
+
+        print(f'\n [Prepare Cards to Learn] Conditions amount: {conditions_amount} '
+              f'-- Words to learn Setting: {words_to_learn_setting}')
+
+        for _ in range(int(words_to_learn_setting/conditions_amount)):
             all_words_amount = all_words.count()
             while all_words_amount > 0:
                 obj = filtered.order_by('?')[0]
-                print(f'Random object: {obj} -- Condition: {condition}')
+                print(f' [Prepare Cards to Learn] Random object: {obj} -- Condition: {condition}')
                 all_words_amount -= 1
                 if obj not in qs_list:
                     qs_list.append(obj)
-                    obj.is_learning = True
-                    obj.save()
+                    WordCard.objects.filter(pk=obj.pk).update(is_learning=True)
+                    words_to_learn_setting -= 1
                     break
                 else:
                     continue
 
     final_qs = list(chain(none_qs, qs_list))
-    print(f"QS list: {qs_list} -- Final QS: {final_qs}")
+    print(f" [Prepare Cards to Learn] QS list: {qs_list}\nFinal QS: {final_qs} - {len(final_qs)}")
 
 
 def get_random_card():
@@ -72,6 +85,10 @@ def update_word_card_with_data(request, kwargs):
     if new_data.get('set_initial', None) is not False:
         print('=== [Update Word Card] GET STATE: <CLEAR CARDS>')
         set_cards_initial_state(kwargs)
+
+    if new_data.get('score', None) is not None:
+        print(f'=== [Update Word Card] Scores Dtected, adding last_learn_date')
+        new_data['last_learn_date'] = timezone.now()
 
     new_data_clean = clean_kwargs(WordCard, {k: v for (k, v) in new_data.items() if v is not None})
     print(f'=== [Update Word Card] Clean New Data : {new_data_clean}')
